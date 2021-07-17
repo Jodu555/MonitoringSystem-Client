@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
     <title>Document</title>
     <style>
         body {
@@ -11,12 +13,97 @@
             width: 100%;
             height: 100%;
         }
+        .percent {
+            position: absolute;
+            left: 24%;
+            transform: translate(-50%, 0);
+            font-size: 60px;
+            bottom: 0;
+            top: 250px;
+        }
     </style>
 </head>
 <body>
-    <canvas id="myChart" style="max-width: 90vw; max-height: 90vh;"></canvas>
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                <div class="row">
+                    <div class="col-3">
+                        <h1>CPU</h1>
+                    </div>
+                    <div class="col-4">
+                        <input data-width="500" readonly data-angleOffset=270 data-angleArc=180 type="text" value="75" class="dial">
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6"><canvas id="myChart" style="max-width: 90vw; max-height: 90vh;"></canvas></div>
+        </div>
+        
+        
+        <h1>Test</h1>
+    </div>
+    
+    
+    
 </body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://rawgit.com/aterrien/jQuery-Knob/master/dist/jquery.knob.min.js"></script>
+<!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.4.1/dist/chart.min.js"></script>
+
+<script>
+    $(function() {
+        $(".dial").knob({
+            'min':0,
+            'max':100,
+            'width':100,
+            'height':100,
+            'displayInput': true,
+            'fgColor':"#FF0000",
+        });
+    });
+</script>
+
+<script>
+
+    // var ctx2 = document.getElementById("myotherChart");
+    // var dashboardChart2 = new Chart(ctx2, {
+    //     type: 'doughnut',
+    //     data: {
+    //         labels: ["Purple"],
+    //         datasets: [{
+    //             label: '# of Votes',
+    //             data: [50],
+    //             backgroundColor: [
+    //                'rgba(159, 90, 253, 1)'
+    //             ],
+    //             borderColor: [
+    //                 'rgba(255, 255, 255 ,1)',
+    //             ],
+    //             borderWidth: 2
+    //         }]
+
+    //     },
+    //     options: {
+    //         plugins: {
+    //             legend: {
+    //                 display: false
+    //             },
+    //             tooltip: {
+    //                 enabled: false
+    //             },
+    //         }
+    //         // rotation: 85.3 * Math.PI,/** This is where you need to work out where 89% is */
+    //         // circumference: 57.7 * Math.PI,/** put in a much smaller amount  so it does not take up an entire semi circle */
+            
+    //         // cutoutPercentage: 95
+    //     }
+    // });
+</script>
+
 <script>
 var ctx = document.getElementById('myChart').getContext('2d');
 var myChart = new Chart(ctx, {
