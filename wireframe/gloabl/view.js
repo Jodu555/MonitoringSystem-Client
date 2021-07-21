@@ -29,6 +29,87 @@ document.querySelectorAll('[data-collapse]').forEach(element => {
 
 let sec = 1;
 
+let cpuChart;
+let memoryChart;
+setupChart();
+
+function setupChart() {
+    var cpuctx = document.getElementById('cpuChart').getContext('2d');
+    cpuChart = new Chart(cpuctx, {
+        type: 'line',
+        data: {
+            labels: ['00:00'],
+            datasets: [{
+                label: 'Usage of CPU',
+                data: [0],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+                cubicInterpolationMode: 'monotone',
+                tension: 0.9
+            }]
+        },
+        options: {
+            // animation: {
+            //     duration: 0
+            // },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    userCallback: (label, index, labels) => {
+                        console.log(label);
+                        if (Math.floor(label) == label) {
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    var memoryctx = document.getElementById('memoryChart').getContext('2d');
+    memoryChart = new Chart(memoryctx, {
+        type: 'line',
+        data: {
+            labels: ['00:00'],
+            datasets: [{
+                label: 'Usage of Memory',
+                data: [0],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+                cubicInterpolationMode: 'monotone',
+                tension: 0.9
+            },
+            {
+                label: 'Maximum of Memory',
+                data: [1024],
+                backgroundColor: 'rgba(239, 26, 58, 0.2)',
+                borderColor: 'rgba(239, 26, 58, 1)',
+                borderWidth: 1,
+                cubicInterpolationMode: 'monotone',
+                tension: 0.9
+            }]
+        },
+        options: {
+            // animation: {
+            //     duration: 0
+            // },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    userCallback: (label, index, labels) => {
+                        console.log(label);
+                        if (Math.floor(label) == label) {
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
 setInterval(() => {
     //CPU / MEM
     $('#cpu')
@@ -39,6 +120,9 @@ setInterval(() => {
         .val(getRandomInt(10, 100))
         .trigger('change');
 
+    animateCPUChart();
+    animateMemoryChart();
+
     //Uptime
     if (sec > 968000) {
         sec = 1;
@@ -46,6 +130,33 @@ setInterval(() => {
     document.querySelector('#uptime').innerText = secondsToTimeString(sec);
     sec = sec + getRandomInt(50, 150);
 }, 1000);
+
+function animateCPUChart(params) {
+    const time = getRandomInt(1, 23) + ':' + (getRandomInt(1, 2) == 1 ? '30' : '00');
+    if (cpuChart.data.labels.length == 24) {
+        cpuChart.data.labels = [];
+        cpuChart.data.datasets[0].data = [];
+    }
+    cpuChart.data.labels.push(time); //PUSH NEW TIME
+    cpuChart.data.datasets[0].data.push(getRandomInt(1, 99)); //PUSH NEW VALUE
+    cpuChart.update();
+}
+
+function animateMemoryChart(params) {
+    const time = getRandomInt(1, 23) + ':' + (getRandomInt(1, 2) == 1 ? '30' : '00');
+    if (memoryChart.data.labels.length == 24) {
+        memoryChart.data.labels = [];
+        memoryChart.data.datasets.forEach((dataset) => {
+            dataset[0].data = [];
+        })
+    }
+    memoryChart.data.labels.push(time); //PUSH NEW TIME
+    const used = memoryChart.data.datasets[0].data;
+    const max = memoryChart.data.datasets[1].data;
+    used.push(getRandomInt(1, 1024)); //PUSH NEW USED MEMORY
+    max.push(1024); //PUSH NEW MAX MEMORY
+    memoryChart.update();
+}
 
 function getRandomInt(min, max) {
     min = Math.ceil(min);
