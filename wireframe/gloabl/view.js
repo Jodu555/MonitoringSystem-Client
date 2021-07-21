@@ -34,6 +34,24 @@ let memoryChart;
 setupChart();
 
 function setupChart() {
+    const scales = {
+        y: {
+            beginAtZero: true,
+            userCallback: (label, index, labels) => {
+                console.log(label);
+                if (Math.floor(label) == label) {
+                    return label;
+                }
+            }
+        }
+    };
+    const datasetsDefault = {
+        borderWidth: 1,
+        cubicInterpolationMode: 'monotone',
+        tension: 0.9,
+        data: [0],
+    }
+
     var cpuctx = document.getElementById('cpuChart').getContext('2d');
     cpuChart = new Chart(cpuctx, {
         type: 'line',
@@ -41,29 +59,13 @@ function setupChart() {
             labels: ['00:00'],
             datasets: [{
                 label: 'Usage of CPU',
-                data: [0],
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1,
-                cubicInterpolationMode: 'monotone',
-                tension: 0.9
+                ...datasetsDefault
             }]
         },
         options: {
-            // animation: {
-            //     duration: 0
-            // },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    userCallback: (label, index, labels) => {
-                        console.log(label);
-                        if (Math.floor(label) == label) {
-                            return label;
-                        }
-                    }
-                }
-            }
+            scales
         }
     });
 
@@ -74,38 +76,23 @@ function setupChart() {
             labels: ['00:00'],
             datasets: [{
                 label: 'Usage of Memory',
-                data: [0],
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1,
-                cubicInterpolationMode: 'monotone',
-                tension: 0.9
+                ...datasetsDefault
             },
             {
                 label: 'Maximum of Memory',
-                data: [1024],
                 backgroundColor: 'rgba(239, 26, 58, 0.2)',
                 borderColor: 'rgba(239, 26, 58, 1)',
-                borderWidth: 1,
-                cubicInterpolationMode: 'monotone',
-                tension: 0.9
+                ...datasetsDefault,
+                data: [1024],
             }]
         },
         options: {
             // animation: {
             //     duration: 0
             // },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    userCallback: (label, index, labels) => {
-                        console.log(label);
-                        if (Math.floor(label) == label) {
-                            return label;
-                        }
-                    }
-                }
-            }
+            scales
         }
     });
 }
@@ -147,8 +134,8 @@ function animateMemoryChart(params) {
     if (memoryChart.data.labels.length == 24) {
         memoryChart.data.labels = [];
         memoryChart.data.datasets.forEach((dataset) => {
-            dataset[0].data = [];
-        })
+            dataset.data = [];
+        });
     }
     memoryChart.data.labels.push(time); //PUSH NEW TIME
     const used = memoryChart.data.datasets[0].data;
