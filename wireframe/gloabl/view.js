@@ -27,7 +27,21 @@ document.querySelectorAll('[data-collapse]').forEach(element => {
 
 });
 
-secondsToTimeString(864000);
+let sec = 1;
+
+setInterval(() => {
+    if (sec > 868000) {
+        sec = 1;
+    }
+    document.querySelector('#uptime').innerText = secondsToTimeString(sec);
+    sec = sec * 2 + getRandomInt(0, 100);
+}, 1000);
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 function secondsToTimeString(seconds) {
     let days = Math.floor(seconds / 60 / 60 / 24);
@@ -40,5 +54,5 @@ function secondsToTimeString(seconds) {
         + (hours > 9 ? hours : '0' + hours)
         + ':' + (minutes > 9 ? minutes : '0' + minutes)
         + ':' + (seconds > 9 ? seconds : '0' + seconds);
-    console.log(output);
+    return output;
 }
