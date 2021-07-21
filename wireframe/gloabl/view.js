@@ -27,7 +27,7 @@ document.querySelectorAll('[data-collapse]').forEach(element => {
 
 });
 
-secondsToTimeString(528862);
+secondsToTimeString(864000);
 
 function secondsToTimeString(seconds) {
     let days = Math.floor(seconds / 60 / 60 / 24);
@@ -36,8 +36,8 @@ function secondsToTimeString(seconds) {
     seconds = seconds - hours * 60 * 60;
     let minutes = Math.floor(seconds / 60);
     seconds = seconds - minutes * 60;
-    const output = '' + (days > 9 ? days : '0' + days)
-        + ':' + (hours > 9 ? hours : '0' + hours)
+    const output = '' + (days > 0 ? (days > 9 ? days : '0' + days) + ':' : '')
+        + (hours > 9 ? hours : '0' + hours)
         + ':' + (minutes > 9 ? minutes : '0' + minutes)
         + ':' + (seconds > 9 ? seconds : '0' + seconds);
     console.log(output);
