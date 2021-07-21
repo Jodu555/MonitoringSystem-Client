@@ -30,11 +30,21 @@ document.querySelectorAll('[data-collapse]').forEach(element => {
 let sec = 1;
 
 setInterval(() => {
-    if (sec > 868000) {
+    //CPU / MEM
+    $('#cpu')
+        .val(getRandomInt(10, 100))
+        .trigger('change');
+
+    $('#memory')
+        .val(getRandomInt(10, 100))
+        .trigger('change');
+
+    //Uptime
+    if (sec > 968000) {
         sec = 1;
     }
     document.querySelector('#uptime').innerText = secondsToTimeString(sec);
-    sec = sec * 2 + getRandomInt(0, 100);
+    sec = sec + getRandomInt(50, 150);
 }, 1000);
 
 function getRandomInt(min, max) {

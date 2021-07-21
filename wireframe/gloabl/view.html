@@ -13,9 +13,18 @@
   </head>
   <body style="background-color: #2B2B2B;">
       <br>
-      <div class="row" style="margin-right: 0px;">
+      <div class="row" style="margin-right: 0px; ">
         <div class="col-1" style="width: 2.33333333%;"></div>
-        <div class="col-2 shadow-lg rounded" style="background-color: ghostwhite;">
+        <div class="col-2 shadow-lg rounded scrollable" style="background-color: ghostwhite">
+            <div class="row">
+                <div class="col" style="padding: 0px; padding-left: 5px;">
+                    <button class="btn btn-success m-2" >Add Server</button>
+                </div>
+                <div class="col" style="padding: 0px;">
+                    <button class="btn btn-warning m-2">Add Group</button>
+                </div>
+            </div>
+            
             <ul class="tree">
                 <li>List Item 1</li>
                 <li>List Item 2</li>
@@ -26,12 +35,29 @@
                             <ul class="dashed" id="second">
                                 <li>List Item 3.2.1</li>
                                 <li>List Item 3.2.2</li>
+                                <li>List Item 3.2.3</li>
                             </ul>
                         </li>
                         <li>List Item 3.3</li>
+                        <li>List Item 3.4</li>
+                        <li>List Item 3.5</li>
+                        <li>List Item 3.6</li>
                     </ul>
                 </li>
                 <li>List Item 4</li>
+                <li>List Item 5</li>
+                <li>List Item 6</li>
+                <li>List Item 7</li>
+                <li>List Item 8</li>
+                <li>List Item 9</li>
+                <li>List Item 10</li>
+                <li>List Item 11</li>
+                <li>List Item 12</li>
+                <li>List Item 13</li>
+                <li>List Item 14</li>
+                <li>List Item 15</li>
+                <li>List Item 16</li>
+                <li>List Item 17</li>
             </ul>
         </div>
         <div class="col-1" style="width: 3.33333333%;"></div>
@@ -50,7 +76,7 @@
                                   <h1 class="align-middle">CPU</h1>
                               </div>
                               <div class="col">
-                                <input style="height: 100%" data-width="500" readonly data-angleOffset=270 data-angleArc=180 type="text" value="75" class="dial align-middle">
+                                <input id="cpu" style="height: 100%" data-width="500" readonly data-angleOffset=270 data-angleArc=180 type="text" value="75" class="dial align-middle">
                               </div>
                           </div>
                         </div>
@@ -66,17 +92,17 @@
                                   <h1 class="align-middle">Memory</h1>
                               </div>
                               <div class="col">
-                                <input style="height: 100%" data-width="500" readonly data-angleOffset=270 data-angleArc=180 type="text" value="75" class="dial align-middle">
+                                <input id="memory" style="height: 100%" data-width="500" readonly data-angleOffset=270 data-angleArc=180 type="text" value="75" class="dial align-middle">
                               </div>
                           </div>
                         </div>
                     </div>
                 </div>
                 <!-- Uptime -->
-                <div class="col-4 card">
+                <div class="col-4 card" style="width: 38.833333%;">
                     <div class="card-body" style="padding-top: 1rem; padding-left: 1rem; padding-right: 1rem; padding-bottom: 0rem;">
                         <br>
-                        <h1 class="align-middle">Uptime: <span id="uptime">00:00:00:00</span></h1>
+                        <h1 class="align-middle">Uptime: <span id="uptime">--:--:--:--</span></h1>
                     </div>
                 </div>
                 <div class="col-1" style="width: 1.33333333%;"></div>
@@ -123,14 +149,24 @@
 
     <script>
     //Setup The knob
+        const defaultOptions = {
+            'min':0,
+            'max':100,
+            'width':100,
+            'height':100,
+            'displayInput': true,
+        };
         $(() => {
-            $(".dial").knob({
-                'min':0,
-                'max':100,
-                'width':100,
-                'height':100,
-                'displayInput': true,
+            $("#cpu").knob({
+                ...defaultOptions,
                 'fgColor':"#FF0000",
+            });
+            $("#memory").knob({
+                ...defaultOptions,
+                'fgColor':"#FF0000",
+                'format': (value) => {
+                    return value + '%';
+                },
             });
         });
     </script>
