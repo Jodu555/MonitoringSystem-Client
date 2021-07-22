@@ -127,11 +127,11 @@
             <br>
             <div class="row">
                 <div class="col-1" style="width: 1.33333333%;"></div>
-                <div class="col" style="width: 250px; height: 350px; background-color: black;">
+                <div class="col" style="width: 250px; height: 350px; background-color: #191717;">
                     <canvas id="cpuChart" style="max-width: 90vw; max-height: 90vh;"></canvas>
                 </div>
                 <div class="col-1" style="width: 2.33333333%;"></div>
-                <div class="col" style="width: 250px; height: 350px; background-color: black;">
+                <div class="col" style="width: 250px; height: 350px; background-color: #191717;">
                     <canvas id="memoryChart" style="max-width: 90vw; max-height: 90vh;"></canvas>
                 </div>
                 <div class="col-1" style="width: 1.33333333%;"></div>
@@ -150,26 +150,7 @@
 
     <script>
     //Setup The knob
-        const defaultOptions = {
-            'min':0,
-            'max':100,
-            'width':100,
-            'height':100,
-            'displayInput': true,
-        };
-        $(() => {
-            $("#cpu").knob({
-                ...defaultOptions,
-                'fgColor':"#FF0000",
-            });
-            $("#memory").knob({
-                ...defaultOptions,
-                'fgColor':"#FF0000",
-                'format': (value) => {
-                    return value + '%';
-                },
-            });
-        });
+        
     </script>
 </body>
 </html>

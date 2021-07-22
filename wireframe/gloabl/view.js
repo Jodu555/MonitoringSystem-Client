@@ -32,6 +32,30 @@ let sec = 1;
 let cpuChart;
 let memoryChart;
 setupChart();
+setupKnob();
+
+function setupKnob() {
+    const defaultOptions = {
+        'min': 0,
+        'max': 100,
+        'width': 100,
+        'height': 100,
+        'displayInput': true,
+    };
+    $(() => {
+        $("#cpu").knob({
+            ...defaultOptions,
+            'fgColor': "#FF0000",
+        });
+        $("#memory").knob({
+            ...defaultOptions,
+            'fgColor': "#FF0000",
+            'format': (value) => {
+                return value + '%';
+            },
+        });
+    });
+}
 
 function setupChart() {
     const scales = {
@@ -51,6 +75,14 @@ function setupChart() {
         tension: 0.9,
         data: [0],
     }
+    const primaryChart = {
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+    }
+    const dangerChart = {
+        backgroundColor: 'rgba(239, 26, 58, 0.2)',
+        borderColor: 'rgba(239, 26, 58, 1)',
+    }
 
     var cpuctx = document.getElementById('cpuChart').getContext('2d');
     cpuChart = new Chart(cpuctx, {
@@ -59,8 +91,7 @@ function setupChart() {
             labels: ['00:00'],
             datasets: [{
                 label: 'Usage of CPU',
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
+                ...primaryChart,
                 ...datasetsDefault
             }]
         },
@@ -76,14 +107,12 @@ function setupChart() {
             labels: ['00:00'],
             datasets: [{
                 label: 'Usage of Memory',
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
+                ...primaryChart,
                 ...datasetsDefault
             },
             {
                 label: 'Maximum of Memory',
-                backgroundColor: 'rgba(239, 26, 58, 0.2)',
-                borderColor: 'rgba(239, 26, 58, 1)',
+                ...dangerChart,
                 ...datasetsDefault,
                 data: [1024],
             }]
@@ -99,16 +128,13 @@ function setupChart() {
 
 setInterval(() => {
     //CPU / MEM
-    $('#cpu')
-        .val(getRandomInt(10, 100))
-        .trigger('change');
-
-    $('#memory')
-        .val(getRandomInt(10, 100))
-        .trigger('change');
+    animateKnob('#memory', getRandomInt(1, 100));
+    animateKnob('#cpu', getRandomInt(1, 100));
+    // chnageCurrentCPU();
 
     animateCPUChart();
     animateMemoryChart();
+
 
     //Uptime
     if (sec > 968000) {
@@ -118,6 +144,51 @@ setInterval(() => {
     sec = sec + getRandomInt(50, 150);
 }, 1000);
 
+//0 - 50: Grün | 50 - 80: Gelb | 80 - 90: Orange | 90 - 100: Red | 
+
+
+function chnageCurrentCPU() {
+    const cpu = getRandomInt(1, 100)
+    $('#cpu')
+        .val(cpu)
+        .trigger('change').delay(2000);
+    const color = valueToColor(cpu);
+    $('#cpu').trigger('configure', { 'fgColor': color });
+    document.querySelector('#cpu').style.color = color;
+}
+
+function animateKnob(selector, value) {
+    let current = 0;
+    if (document.querySelector(selector).getAttribute('data-value')) {
+        current = document.querySelector(selector).getAttribute('data-value');
+    }
+    console.log(current);
+    $({ value: current }).animate({ value }, {
+        duration: 500,
+        easing: 'swing',
+        step: function () {
+            $(selector).val(Math.ceil(this.value)).trigger('change');
+        }
+    })
+    const color = valueToColor(value);
+    $(selector).trigger('configure', { 'fgColor': color });
+    document.querySelector(selector).style.color = color;
+    document.querySelector(selector).setAttribute('data-value', value);
+}
+
+function valueToColor(value) {
+    if (value <= 50) {
+        return 'green';
+    } else if (value > 50 && value <= 80) {
+        return '#dde016';
+    } else if (value > 80 && value <= 90) {
+        return 'orange';
+    } else if (value > 90) {
+        return 'red';
+    }
+    return 'red';
+}
+
 function animateCPUChart(params) {
     const time = getRandomInt(1, 23) + ':' + (getRandomInt(1, 2) == 1 ? '30' : '00');
     if (cpuChart.data.labels.length == 24) {
@@ -125,7 +196,7 @@ function animateCPUChart(params) {
         cpuChart.data.datasets[0].data = [];
     }
     cpuChart.data.labels.push(time); //PUSH NEW TIME
-    cpuChart.data.datasets[0].data.push(getRandomInt(1, 99)); //PUSH NEW VALUE
+    cpuChart.data.datasets[0].data.push(getRandomInt(3, 99)); //PUSH NEW VALUE
     cpuChart.update();
 }
 
@@ -140,7 +211,10 @@ function animateMemoryChart(params) {
     memoryChart.data.labels.push(time); //PUSH NEW TIME
     const used = memoryChart.data.datasets[0].data;
     const max = memoryChart.data.datasets[1].data;
-    used.push(getRandomInt(1, 1024)); //PUSH NEW USED MEMORY
+
+    const mem = getRandomInt(100, 1024)
+    // console.log(mem);
+    used.push(mem); //PUSH NEW USED MEMORY
     max.push(1024); //PUSH NEW MAX MEMORY
     memoryChart.update();
 }
