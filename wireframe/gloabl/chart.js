@@ -4,6 +4,12 @@ let memoryChart;
 setupChart();
 
 function setupChart() {
+    if (!localStorage.getItem('chartTimePeriod')) {
+        localStorage.setItem('chartTimePeriod', 'day');
+    }
+
+    document.getElementById(localStorage.getItem('chartTimePeriod')).classList.add('active');
+
     const options = {
         scales: {
             y: {
@@ -68,8 +74,13 @@ function setupChart() {
 }
 
 function changeChartView(type) {
+    const current = localStorage.getItem('chartTimePeriod');
+    document.getElementById(current).classList.remove('active');
+    document.getElementById(type).classList.add('active');
+
     clearChart(cpuChart);
     clearChart(memoryChart);
+    localStorage.setItem('chartTimePeriod', type);
 }
 
 function animateCPUChart(params) {

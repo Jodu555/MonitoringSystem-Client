@@ -4,6 +4,9 @@
     overflow-y: auto;
 }
 
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    background-color: #184484!important;
+}
 
 /* TREE LIST */
 ul.tree, ul.tree ul {
