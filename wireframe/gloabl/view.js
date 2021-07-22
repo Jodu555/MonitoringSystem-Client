@@ -41,30 +41,27 @@ function setupKnob() {
         'width': 100,
         'height': 100,
         'displayInput': true,
+        'fgColor': "blue",
+        'format': (value) => {
+            return value + '%';
+        },
     };
     $(() => {
-        $("#cpu").knob({
-            ...defaultOptions,
-            'fgColor': "#FF0000",
-        });
-        $("#memory").knob({
-            ...defaultOptions,
-            'fgColor': "#FF0000",
-            'format': (value) => {
-                return value + '%';
-            },
-        });
+        $("#cpu").knob(defaultOptions);
+        $("#memory").knob(defaultOptions);
     });
 }
 
 function setupChart() {
-    const scales = {
-        y: {
-            beginAtZero: true,
-            userCallback: (label, index, labels) => {
-                console.log(label);
-                if (Math.floor(label) == label) {
-                    return label;
+    const options = {
+        scales: {
+            y: {
+                beginAtZero: true,
+                userCallback: (label, index, labels) => {
+                    console.log(label);
+                    if (Math.floor(label) == label) {
+                        return label;
+                    }
                 }
             }
         }
@@ -84,7 +81,7 @@ function setupChart() {
         borderColor: 'rgba(239, 26, 58, 1)',
     }
 
-    var cpuctx = document.getElementById('cpuChart').getContext('2d');
+    const cpuctx = document.getElementById('cpuChart').getContext('2d');
     cpuChart = new Chart(cpuctx, {
         type: 'line',
         data: {
@@ -95,12 +92,10 @@ function setupChart() {
                 ...datasetsDefault
             }]
         },
-        options: {
-            scales
-        }
+        options
     });
 
-    var memoryctx = document.getElementById('memoryChart').getContext('2d');
+    const memoryctx = document.getElementById('memoryChart').getContext('2d');
     memoryChart = new Chart(memoryctx, {
         type: 'line',
         data: {
@@ -117,12 +112,7 @@ function setupChart() {
                 data: [1024],
             }]
         },
-        options: {
-            // animation: {
-            //     duration: 0
-            // },
-            scales
-        }
+        options
     });
 }
 
@@ -130,7 +120,6 @@ setInterval(() => {
     //CPU / MEM
     animateKnob('#memory', getRandomInt(1, 100));
     animateKnob('#cpu', getRandomInt(1, 100));
-    // chnageCurrentCPU();
 
     animateCPUChart();
     animateMemoryChart();
@@ -142,20 +131,9 @@ setInterval(() => {
     }
     document.querySelector('#uptime').innerText = secondsToTimeString(sec);
     sec = sec + getRandomInt(50, 150);
-}, 1000);
+}, 1500);
 
-//0 - 50: Grün | 50 - 80: Gelb | 80 - 90: Orange | 90 - 100: Red | 
-
-
-function chnageCurrentCPU() {
-    const cpu = getRandomInt(1, 100)
-    $('#cpu')
-        .val(cpu)
-        .trigger('change').delay(2000);
-    const color = valueToColor(cpu);
-    $('#cpu').trigger('configure', { 'fgColor': color });
-    document.querySelector('#cpu').style.color = color;
-}
+//0 - 50: Grün | 50 - 80: Orange | 80 - 100: Red | 
 
 function animateKnob(selector, value) {
     let current = 0;
@@ -170,9 +148,11 @@ function animateKnob(selector, value) {
             $(selector).val(Math.ceil(this.value)).trigger('change');
         }
     })
-    const color = valueToColor(value);
-    $(selector).trigger('configure', { 'fgColor': color });
-    document.querySelector(selector).style.color = color;
+    setTimeout(() => {
+        const color = valueToColor(value);
+        $(selector).trigger('configure', { 'fgColor': color });
+        document.querySelector(selector).style.color = color;
+    }, 250);
     document.querySelector(selector).setAttribute('data-value', value);
 }
 
@@ -180,8 +160,6 @@ function valueToColor(value) {
     if (value <= 50) {
         return 'green';
     } else if (value > 50 && value <= 80) {
-        return '#dde016';
-    } else if (value > 80 && value <= 90) {
         return 'orange';
     } else if (value > 90) {
         return 'red';
