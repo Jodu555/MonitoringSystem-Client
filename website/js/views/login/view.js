@@ -8,13 +8,25 @@ const view = new View('login', {
 
 });
 
-view.defineFunction('handleRegisterForm', (event, data) => {
-    console.log(data);
-    console.log(window.app);
+view.defineFunction('handleRegisterForm', async (event, data) => {
+    const response = await window.post('/auth/register', data);
+    if (!response.success) {
+        view.variables.registerErrorMessage = response.message
+        view.variables.registerError = true;
+    } else {
+
+    }
+
 });
 
-view.defineFunction('handleLoginForm', (event, data) => {
-    console.log(data);
+view.defineFunction('handleLoginForm', async (event, data) => {
+    const response = await window.post('/auth/login', data);
+    if (!response.success) {
+        view.variables.registerErrorMessage = response.message
+        view.variables.registerError = true;
+    } else {
+        view.app.route('/list');
+    }
 });
 
 view.setHTMLFile('js/views/login/view.html');
