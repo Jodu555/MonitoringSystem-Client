@@ -3,14 +3,14 @@
 		<div class="container mt-4">
 			<div class="row">
 				<div class="col-5">
-                    <div id="alert-login" class="alert alert-dismissible">
+                    <div data-if="loginError" id="alert-login" class="alert alert-dismissible">
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        <strong id="alert-type-login">Error:</strong> <span id="alert-message-login"></span>
+                        <strong id="alert-type-login">Error:</strong> <span>${{loginErrorMessage}}</span>
                     </div>
 					<div class="card border-dark mb-3">
 						<div class="card-header">Login</div>
 						<div class="card-body">
-							<h4 class="card-title">Login to the Hoster List</h4>
+							<h4 class="card-title">Login to the Monitoring System</h4>
                             <hr>
 							<form class="card-text" data-call='handleLoginForm()'>
                                 <fieldset>
@@ -31,14 +31,14 @@
 				</div>
 				<div class="col-2"></div>
 				<div class="col-5">
-                    <div id="alert-register" class="alert alert-dismissible">
+                    <div data-if="registerError" id="alert-register" class="alert alert-dismissible">
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        <strong id="alert-type-register">Error:</strong> <span id="alert-message-register"></span>
+                        <strong id="alert-type-register">Error:</strong> <span>${{registerErrorMessage}}</span>
                     </div>
 					<div class="card border-dark mb-3">
 						<div class="card-header">Register</div>
 						<div class="card-body">
-							<h4 class="card-title">Register to the Hoster List</h4>
+							<h4 class="card-title">Register to the Monitoring System</h4>
                             <hr>
 							<form class="card-text" data-call='handleRegisterForm()'>
                                 <fieldset>
