@@ -10,18 +10,24 @@ window.post = async (route, body) => {
     const json = await response.json();
     return json;
 }
+
 import { App } from '../jwork/App.js';
 
 import { view as login } from './views/login/view.js';
+import { view as list } from './views/list/view.js';
 
 const app = new App(document.querySelector('#app'), [
-    login
+    login,
+    list
 ]);
 
 app.setRouter({
     default: 'login',
     'login': {
         route: '/login'
+    },
+    'list': {
+        route: '/list'
     }
 });
 
