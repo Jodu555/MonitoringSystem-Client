@@ -1,0 +1,61 @@
+.scrollable {
+    height: 90vh; 
+    max-height: 90vh; 
+    overflow-y: auto;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    background-color: #184484!important;
+}
+
+/* TREE LIST */
+ul.tree, ul.tree ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+} 
+ul.tree ul {
+    margin-left: 10px;
+}
+ul.tree li {
+    margin: 0;
+    padding: 0 7px;
+    line-height: 30px;
+    font-weight: bold;
+    border-left:1px solid rgb(100,100,100);
+}
+
+ul.tree li:before {
+    position:relative;
+    height:1em;
+    width:32px;
+    display:inline-block;
+    left:-7px;
+}
+
+ul.tree li:not(.collapsible):before {
+    top:-0.3em;
+    color:white;
+    border-bottom:1px solid rgb(100,100,100);
+    content:"";
+}
+
+ul.tree .collapsible:before {
+    content:"― +";
+}
+
+ul.tree li:first-child:not(.collapsible-entity) {
+    border-top: 2px solid rgb(100,100,100);
+}
+
+ul.tree li:last-child {
+    border-left:none;
+}
+
+ul.tree li:last-child:before {
+    border-left:1px solid rgb(100,100,100);   
+}
+
+ul.tree .collapsible-entity {
+    margin-left: 7px;
+}

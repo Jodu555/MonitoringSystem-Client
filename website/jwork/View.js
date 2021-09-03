@@ -38,9 +38,9 @@ class View {
     }
 
     init(with_interval = true) {
-
-
         this.initCallElements();
+        this.initScriptElements();
+
         this.element.querySelectorAll('[data-define-component]').forEach(element => {
             this.components.set(element.getAttribute("data-define-component"), element);
         });
@@ -80,6 +80,15 @@ class View {
     call(event) {
         if (this.eventfunctions.get(event.toLowerCase()))
             this.eventfunctions.get(event.toLowerCase())();
+    }
+
+    initScriptElements() {
+        this.element.querySelectorAll('script').forEach(element => {
+            const script = document.createElement('script');
+            script.src = element.src;
+            this.element.appendChild(script);
+            element.remove();
+        });
     }
 
     initCallElements() {
@@ -223,6 +232,7 @@ class View {
     }
 
     //Defines
+    //TODO: Allow to define a function to call e.g. when 1 of two variables changed
     defineChnageWrapper(key, fun) {
         this.changeWrappers.set(key, fun);
     }
