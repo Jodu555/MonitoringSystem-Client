@@ -30,9 +30,9 @@ setInterval(() => {
 
 
     //Uptime
-    if (sec > 968000) {
-        sec = 1;
-    }
+    // if (sec > 968000) {
+    //     sec = 1;
+    // }
     document.querySelector('#uptime').innerText = secondsToTimeString(sec);
     sec = sec + getRandomInt(50, 150);
 }, 1500);
