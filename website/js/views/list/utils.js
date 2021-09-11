@@ -30,9 +30,9 @@ setInterval(() => {
 
 
     //Uptime
-    // if (sec > 968000) {
-    //     sec = 1;
-    // }
+    if (sec > 968000) {
+        sec = 1;
+    }
     document.querySelector('#uptime').innerText = secondsToTimeString(sec);
     sec = sec + getRandomInt(50, 150);
 }, 1500);
@@ -41,16 +41,16 @@ setInterval(() => {
 
 function animateKnob(selector, value) {
     let current = 0;
-    if (document.querySelector(selector).getAttribute('data-value')) {
+    if (document.querySelector(selector).getAttribute('data-value'))
         current = document.querySelector(selector).getAttribute('data-value');
-    }
+
     $({ value: current }).animate({ value }, {
         duration: 500,
         easing: 'swing',
         step: function () {
             $(selector).val(Math.ceil(this.value)).trigger('change');
         }
-    })
+    });
     setTimeout(() => {
         const color = valueToColor(value);
         $(selector).trigger('configure', { 'fgColor': color });
