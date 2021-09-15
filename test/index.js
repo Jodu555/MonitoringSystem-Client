@@ -1,13 +1,18 @@
+const token = 'SECRET-DEV-KEY';
 const PERSISTENT_DATA = 'PERSISTENT_DATA';
 const CHANGE_DATA = 'CHANGE_DATA';
 
 const socket = io("http://localhost:3000");
+let auth = false;
 
 socket.on('auth', (data) => {
     console.log('Authentication:', data ? 'Success!' : 'Failed');
-    if (data) {
-        socket.emit('subscribe', { serverUUID: 'jogfndsoignsofnsofndogfnsopf' });
-    }
+    auth = data;
+});
+
+document.querySelector('#subToServer').addEventListener('click', () => {
+    if (auth)
+        socket.emit('subscribe', { serverUUID: document.querySelector('#serverUUID').value });
 });
 
 socket.on('message', (data) => {
@@ -28,7 +33,7 @@ socket.on('change', ({ server, data }) => {
 
 socket.on('connect', () => {
     socket.emit('type', { type: 'client' });
-    socket.emit('auth', { token: 'SECRET-DEV-KEY' })
+    socket.emit('auth', { token })
 });
 
 
