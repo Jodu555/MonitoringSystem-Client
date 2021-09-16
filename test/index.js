@@ -6,7 +6,6 @@ const socket = io("http://localhost:3000");
 let auth = false;
 
 socket.on('auth', (data) => {
-    console.log('Authentication:', data ? 'Success!' : 'Failed');
     auth = data;
 });
 
@@ -16,7 +15,11 @@ document.querySelector('#subToServer').addEventListener('click', () => {
 });
 
 socket.on('message', (data) => {
-    console.log(data);
+    if (data.type == 'error') {
+        console.error('Error: ' + data.msg);
+    } else {
+        console.log('Success: ' + data.msg);
+    }
 })
 
 socket.on('change', ({ server, data }) => {
