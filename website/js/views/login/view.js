@@ -22,8 +22,8 @@ view.defineFunction('handleRegisterForm', async (event, data) => {
 view.defineFunction('handleLoginForm', async (event, data) => {
     const response = await window.post('/auth/login', data);
     if (!response.success) {
-        view.variables.registerErrorMessage = response.message
-        view.variables.registerError = true;
+        view.variables.loginErrorMessage = response.message
+        view.variables.loginError = true;
     } else {
         view.app.route('/list');
     }

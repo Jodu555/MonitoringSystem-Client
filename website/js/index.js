@@ -1,4 +1,4 @@
-window.API_URL = 'http://localhost:3100';
+window.API_URL = 'http://localhost:3000';
 window.post = async (route, body) => {
     const response = await fetch(window.API_URL + route, {
         method: 'POST',
