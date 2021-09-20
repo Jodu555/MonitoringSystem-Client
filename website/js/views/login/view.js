@@ -25,6 +25,8 @@ view.defineFunction('handleLoginForm', async (event, data) => {
         view.variables.loginErrorMessage = response.message
         view.variables.loginError = true;
     } else {
+        // response.token
+        view.app.getCookieManager().setCookie('auth-token', response.token, 15);
         view.app.route('/list');
     }
 });
