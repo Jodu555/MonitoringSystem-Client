@@ -36,6 +36,10 @@ socket.on('change', ({ server, data }) => {
     });
 })
 
+socket.on('servers', (servers) => {
+    console.log(servers);
+});
+
 function secondsToTimeString(seconds) {
     let days = Math.floor(seconds / 60 / 60 / 24);
     seconds = seconds - days * 60 * 60 * 24;
