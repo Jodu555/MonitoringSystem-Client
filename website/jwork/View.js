@@ -39,7 +39,8 @@ class View {
 
     init(with_interval = true) {
         this.initCallElements();
-        this.initScriptElements();
+        if (this.initial)
+            this.initScriptElements();
 
         this.element.querySelectorAll('[data-define-component]').forEach(element => {
             this.components.set(element.getAttribute("data-define-component"), element);
@@ -84,16 +85,13 @@ class View {
 
     initScriptElements() {
         this.element.querySelectorAll('script').forEach(element => {
-
             const script = document.createElement('script');
             if (element.src)
                 script.src = element.src;
             if (!element.src)
                 script.text = element.text;
-
             this.element.appendChild(script);
             element.remove();
-
         });
     }
 
@@ -126,7 +124,6 @@ class View {
         // console.log('UPDATE');
         // console.time('update');
         this.call('update');
-
         [...this.element.querySelectorAll('[data-kill]')].filter(e => e.getAttribute("data-kill") == 'true').forEach(e => e.remove());
 
         this.element.querySelectorAll('[data-load-component]').forEach(element => {
@@ -142,8 +139,10 @@ class View {
                 typeof template == 'string' ? template = createElementFromHTML(template) : template = template;
                 element.innerHTML = template.innerHTML;
                 this.init(false);
-                if (this.target == 'index')
+                if (target == 'index') {
                     this.initial = false;
+                }
+
             } catch (error) {
                 this.needupdate = true;
             }
@@ -179,7 +178,7 @@ class View {
 
     updateVarContainsElements() {
         this.element.querySelectorAll('*').forEach(element => {
-            if (element.innerText.includes('${{') && element.children.length == 0) {
+            if (element.innerText.includes('${{') && element.children.length == 0 && element.style.display !== 'none') {
                 const clone = element.cloneNode(true);
                 element.after(clone);
                 clone.innerText = concatWithVariables(clone.innerText, this.variables);
@@ -197,11 +196,19 @@ class View {
         this.element.querySelectorAll('[data-for]').forEach(element => {
             const target = element.getAttribute("data-for");
             const split = target.split(' in ');
+            // console.log(element.children);
             this.variables[split[1]].forEach(item => {
                 const clone = element.cloneNode(true);
-                clone.innerText = clone.innerText.replace(`{{${split[0]}}}`, item);
-                clone.style.display = '';
+                const forVars = this.variables;
+                forVars[split[0]] = item;
+                clone.innerText = concatWithVariables(clone.innerText, forVars);
                 clone.removeAttribute('data-for');
+                clone.style.display = '';
+                [...clone.attributes].forEach(attribute => {
+                    const { name, value } = attribute;
+                    clone.setAttribute(name, concatWithVariables(clone.innerText, forVars));
+                });
+
                 clone.setAttribute('data-kill', true);
                 element.after(clone);
             });
@@ -239,7 +246,7 @@ class View {
 
     //Defines
     //TODO: Allow to define a function to call e.g. when 1 of two variables changed
-    defineChnageWrapper(key, fun) {
+    defineChangeWrapper(key, fun) {
         this.changeWrappers.set(key, fun);
     }
     defineFunction(name, fun) {
