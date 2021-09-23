@@ -4,18 +4,14 @@ const CHANGE_DATA = 'CHANGE_DATA';
 const view = new View('list', {
     auth: false,
     servers: [],
-    serverNames: [],
     currentSelectedServer: null,
 
 }, (view) => {
 
 });
-view.defineChangeWrapper('servers', (prev, curr) => {
-    view.variables.serverNames = curr.map((o) => o.name);
-})
 
 view.defineFunction('selectServer', (name) => {
-
+    console.log('Server selected: ' + name);
 });
 
 const socket = io("http://localhost:3000");

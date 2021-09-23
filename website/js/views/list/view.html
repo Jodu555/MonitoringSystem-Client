@@ -50,7 +50,7 @@
 				</div>
 
 				<ul class="tree">
-					<li data-for="name in serverNames" data-call="selectServer('{{name}}')">{{name}}</li>
+					<li data-for="server in servers" data-call="selectServer('${{server.name}}')">${{server.name}}</li>
 				</ul>
 			</div>
 			<div class="col-1" style="width: 3.33333333%"></div>
