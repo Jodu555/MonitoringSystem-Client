@@ -27,6 +27,7 @@ socket.on('change', ({ server, data }) => {
     data.forEach(dat => {
         if (dat.type == PERSISTENT_DATA) {
             document.querySelector('#uptime').innerText = secondsToTimeString(dat.uptime);
+            document.querySelector('#address').innerText = JSON.parse(dat.ips)[0].address;
         }
         if (dat.type == CHANGE_DATA) {
             const { cpu_usage, used_memory, max_memory } = dat;
