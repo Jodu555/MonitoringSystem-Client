@@ -22,19 +22,19 @@ function setupKnob() {
 
 setInterval(() => {
     //CPU / MEM
-    animateKnob('#memory', getRandomInt(1, 100));
-    animateKnob('#cpu', getRandomInt(1, 100));
+    // animateKnob('#memory', getRandomInt(1, 100));
+    // animateKnob('#cpu', getRandomInt(1, 100));
 
-    animateCPUChart();
-    animateMemoryChart();
+    // animateCPUChart();
+    // animateMemoryChart();
 
 
-    //Uptime
-    if (sec > 968000) {
-        sec = 1;
-    }
-    document.querySelector('#uptime').innerText = secondsToTimeString(sec);
-    sec = sec + getRandomInt(50, 150);
+    // //Uptime
+    // if (sec > 968000) {
+    //     sec = 1;
+    // }
+    // document.querySelector('#uptime').innerText = secondsToTimeString(sec);
+    // sec = sec + getRandomInt(50, 150);
 }, 1500);
 
 //0 - 50: Grün | 50 - 80: Orange | 80 - 100: Red | 

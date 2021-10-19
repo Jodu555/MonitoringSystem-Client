@@ -50,7 +50,9 @@
 				</div>
 
 				<ul class="tree">
-					<li data-for="server in servers" data-call="selectServer('${{server.name}}')">${{server.name}}</li>
+					<li data-for="server in servers" data-call="selectServer('${{server.name}}')">
+						${{server.name}}
+					</li>
 				</ul>
 			</div>
 			<div class="col-1" style="width: 3.33333333%"></div>
@@ -145,7 +147,7 @@
 										"
 									>
 										<br />
-										<div class="row" style="margin-right: 0px;">
+										<div class="row" style="margin-right: 0px">
 											<div class="col">
 												<h1 class="align-middle">Memory</h1>
 											</div>

@@ -10,8 +10,19 @@ const view = new View('list', {
 
 });
 
-view.defineFunction('selectServer', (name) => {
+function getServerByName(name) {
+    let out;
+    view.variables.servers.forEach(server => {
+        if (server.name === name)
+            out = server;
+    });
+    return out;
+}
+
+view.defineFunction('selectServer', (event, name) => {
     console.log('Server selected: ' + name);
+    const serverUUID = getServerByName(name).UUID;
+    socket.emit('subscribe', { serverUUID });
 });
 
 const socket = io("http://localhost:3000");
@@ -36,8 +47,10 @@ socket.on('change', ({ server, data }) => {
         }
         if (dat.type == CHANGE_DATA) {
             const { cpu_usage, used_memory, max_memory } = dat;
-            document.querySelector('#cpu').innerText = cpu_usage + '% CPU'
-            document.querySelector('#mem').innerText = used_memory + 'GB / ' + max_memory + 'GB';
+            animateKnob('#cpu', cpu_usage);
+            animateKnob('#memory', used_memory);
+            // document.querySelector('#cpu').innerText = cpu_usage + '% CPU'
+            // document.querySelector('#memory').innerText = used_memory + 'GB / ' + max_memory + 'GB';
         }
     });
 })
