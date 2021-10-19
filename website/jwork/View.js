@@ -9,6 +9,7 @@ import {
 } from './utils.js';
 
 class View {
+
     constructor(name, variables, onCreate) {
         this.name = name;
         if (!variables) {
@@ -25,7 +26,7 @@ class View {
         this.initial = true;
         this.interval = null;
         if (onCreate)
-            this.eventfunctions.set('create', onCreate(this));
+            this.eventfunctions.set('create', [onCreate(this)]);
         return this;
     }
 
@@ -62,8 +63,11 @@ class View {
             // console.log(JSON.stringify(this.prevariables), JSON.stringify(this.variables));
             if (JSON.stringify(this.prevariables) !== JSON.stringify(curr)) {
                 Object.keys(curr).forEach(key => {
-                    if (curr[key] !== this.prevariables[key] && this.changeWrappers.get(key)) {
-                        change = this.changeWrappers.get(key)(clone(this.prevariables[key]), clone(curr[key]));
+                    if (curr[key] !== this.prevariables[key] && this.changeWrappers.has(key)) {
+                        const changeWrappers = this.changeWrappers.get(key)
+                        changeWrappers.forEach(wrapper => {
+                            wrapper(clone(this.prevariables[key]), clone(curr[key]))
+                        });
                     }
                 });
                 if (change || change == undefined) {
@@ -79,8 +83,12 @@ class View {
     }
 
     call(event) {
-        if (this.eventfunctions.get(event.toLowerCase()))
-            this.eventfunctions.get(event.toLowerCase())();
+        event = event.toLowerCase();
+        if (this.eventfunctions.has(event))
+            this.eventfunctions.get(event).forEach(fn => {
+                if (fn)
+                    fn();
+            });
     }
 
     initScriptElements() {
@@ -148,6 +156,8 @@ class View {
             }
         });
 
+        this.updateDataForElements();
+
         this.element.querySelectorAll('a').forEach(element => {
             element.setAttribute('href', '#' + this.app.satisfyRoute(element.getAttribute("href")));
         });
@@ -155,8 +165,6 @@ class View {
         this.initCallElements();
         this.updateDataBindElements();
 
-
-        this.updateDataForElements();
         this.updateDataIfElements();
         this.updateVarContainsElements();
 
@@ -196,7 +204,6 @@ class View {
         this.element.querySelectorAll('[data-for]').forEach(element => {
             const target = element.getAttribute("data-for");
             const split = target.split(' in ');
-            // console.log(element.children);
             this.variables[split[1]].forEach(item => {
                 const clone = element.cloneNode(true);
                 const forVars = this.variables;
@@ -206,7 +213,7 @@ class View {
                 clone.style.display = '';
                 [...clone.attributes].forEach(attribute => {
                     const { name, value } = attribute;
-                    clone.setAttribute(name, concatWithVariables(clone.innerText, forVars));
+                    clone.setAttribute(name, concatWithVariables(value, forVars));
                 });
 
                 clone.setAttribute('data-kill', true);
@@ -237,17 +244,25 @@ class View {
 
     //key = create | update |
     on(key, fun) {
+        key = key.toLowerCase();
         if (key == 'create' || key == 'update') {
-            this.eventfunctions.set(key.toLowerCase(), fun);
+            if (!this.eventfunctions.has(key)) {
+                this.eventfunctions.set(key, [fun]);
+            } else {
+                this.eventfunctions.get(key).push(fun);
+            }
         } else {
             console.error('Event: ' + key + ' is not supported yet! Please remove it from your application!');
         }
     }
 
     //Defines
-    //TODO: Allow to define a function to call e.g. when 1 of two variables changed
     defineChangeWrapper(key, fun) {
-        this.changeWrappers.set(key, fun);
+        if (!this.changeWrappers.has(key)) {
+            this.changeWrappers.set(key, [fun]);
+        } else {
+            this.changeWrappers.get(key).push(fun);
+        }
     }
     defineFunction(name, fun) {
         window[name] = fun;
